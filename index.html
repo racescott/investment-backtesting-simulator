@@ -4,13 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>投资回测模拟器(基于真实历史数据)</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <script src="https://unpkg.com/recharts@2.8.0/umd/Recharts.js"></script>
     <script src="https://unpkg.com/lucide-react@0.263.1/dist/umd/lucide-react.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif; }
         .slider::-webkit-slider-thumb {
             appearance: none;
             height: 20px;
@@ -30,7 +31,11 @@
     </style>
 </head>
 <body>
-    <div id="root"></div>
+    <div id="root">
+        <div style="display: flex; justify-content: center; align-items: center; height: 100vh; font-size: 18px;">
+            加载中...
+        </div>
+    </div>
 
     <script type="text/babel">
         const { useState, useMemo, useCallback } = React;
@@ -57,285 +62,45 @@
                     currency: 'USD',
                     symbol: '$',
                     etfs: {
-                        'SPY': { 
-                            name: 'SPDR S&P 500 ETF Trust', 
-                            expenseRatio: 0.0945, 
-                            description: '追踪标准普尔500指数，代表美国大型股市场表现' 
-                        },
-                        'VTI': { 
-                            name: 'Vanguard Total Stock Market ETF', 
-                            expenseRatio: 0.03, 
-                            description: '追踪美国整体股票市场，包含大中小盘股票' 
-                        },
-                        'QQQ': { 
-                            name: 'Invesco QQQ Trust', 
-                            expenseRatio: 0.20, 
-                            description: '追踪纳斯达克100指数，专注美国大型科技股' 
-                        },
-                        'VXUS': { 
-                            name: 'Vanguard Total International Stock ETF', 
-                            expenseRatio: 0.08, 
-                            description: '追踪美国以外的全球发达和新兴市场股票' 
-                        },
-                        'SCHB': { 
-                            name: 'Schwab US Broad Market ETF', 
-                            expenseRatio: 0.03, 
-                            description: '追踪美国广泛市场指数，低成本全市场投资' 
-                        }
+                        'SPY': { name: 'SPDR S&P 500 ETF', expenseRatio: 0.0945, description: '追踪标普500指数' },
+                        'QQQ': { name: 'Invesco QQQ Trust', expenseRatio: 0.20, description: '追踪纳斯达克100指数' },
+                        'VTI': { name: 'Vanguard Total Stock Market', expenseRatio: 0.03, description: '美国全股市ETF' }
                     },
                     banks: {
-                        'HIGH_YIELD': {
-                            name: '高收益储蓄账户',
-                            description: '美国银行高收益储蓄账户平均利率，FDIC保险保障',
-                            riskLevel: '极低风险'
-                        },
-                        'CD_1YEAR': {
-                            name: '一年期定期存款证明(CD)',
-                            description: '美国银行一年期定期存款，利率固定，FDIC保险保障',
-                            riskLevel: '无风险'
-                        },
-                        'MONEY_MARKET': {
-                            name: '货币市场账户',
-                            description: '美国银行货币市场账户，利率浮动，FDIC保险保障',
-                            riskLevel: '极低风险'
-                        }
-                    }
-                },
-                'CA': {
-                    name: '加拿大',
-                    currency: 'CAD',
-                    symbol: 'C$',
-                    etfs: {
-                        'VTI.TO': { 
-                            name: 'Vanguard Total Stock Market Index Fund', 
-                            expenseRatio: 0.05, 
-                            description: '追踪加拿大股票市场整体表现的指数基金' 
-                        },
-                        'TDB902': { 
-                            name: 'TD Canadian Index Fund', 
-                            expenseRatio: 0.31, 
-                            description: 'TD银行加拿大股票指数基金，追踪TSX综合指数' 
-                        },
-                        'VCN': { 
-                            name: 'Vanguard FTSE Canada All Cap Index ETF', 
-                            expenseRatio: 0.05, 
-                            description: '追踪加拿大全市值股票市场，涵盖大中小盘' 
-                        },
-                        'TDB900': { 
-                            name: 'TD Canadian Bond Index Fund', 
-                            expenseRatio: 0.33, 
-                            description: 'TD银行加拿大债券指数基金，追踪加拿大债券市场' 
-                        }
-                    },
-                    banks: {
-                        'HIGH_INTEREST': {
-                            name: '高息储蓄账户',
-                            description: '加拿大主要银行高息储蓄账户利率，CDIC存款保险保障',
-                            riskLevel: '极低风险'
-                        },
-                        'GIC_1YEAR': {
-                            name: '一年期担保投资证明(GIC)',
-                            description: '加拿大银行一年期GIC产品，利率保证，CDIC保险保障',
-                            riskLevel: '无风险'
-                        },
-                        'TFSA': {
-                            name: '免税储蓄账户(TFSA)',
-                            description: '加拿大免税储蓄账户，投资收益免税，CDIC保险保障',
-                            riskLevel: '极低风险'
-                        }
+                        'HIGH_YIELD': { name: '高收益储蓄账户', description: '美国银行高收益储蓄账户', riskLevel: '极低风险' },
+                        'CD_1YEAR': { name: '一年期定期存款', description: '美国银行CD产品', riskLevel: '无风险' }
                     }
                 },
                 'CN': {
                     name: '中国',
-                    currency: 'CNY',
+                    currency: 'CNY', 
                     symbol: '¥',
                     etfs: {
-                        '510300': { 
-                            name: '华泰柏瑞沪深300ETF', 
-                            expenseRatio: 0.50, 
-                            description: '追踪沪深300指数，代表中国A股大盘股市场表现' 
-                        },
-                        '159915': { 
-                            name: '易方达创业板ETF', 
-                            expenseRatio: 0.50, 
-                            description: '追踪创业板指数，代表中国创新成长型企业表现' 
-                        },
-                        '588000': { 
-                            name: '华夏科创50ETF', 
-                            expenseRatio: 0.50, 
-                            description: '追踪科创50指数，专注中国科技创新龙头企业' 
-                        },
-                        '510500': { 
-                            name: '南方中证500ETF', 
-                            expenseRatio: 0.50, 
-                            description: '追踪中证500指数，代表中国中盘股市场表现' 
-                        },
-                        '513100': { 
-                            name: '华泰柏瑞纳斯达克100ETF', 
-                            expenseRatio: 0.80, 
-                            description: '追踪纳斯达克100指数，投资美国科技股' 
-                        }
+                        '510300': { name: '沪深300ETF', expenseRatio: 0.50, description: '追踪沪深300指数' },
+                        '159915': { name: '创业板ETF', expenseRatio: 0.50, description: '追踪创业板指数' }
                     },
                     banks: {
-                        'TERM_1YEAR': {
-                            name: '一年期定期存款',
-                            description: '中国主要银行一年期定期存款利率，存款保险条例保障',
-                            riskLevel: '无风险'
-                        },
-                        'WEALTH_MGMT': {
-                            name: '银行理财产品',
-                            description: '中国银行理财产品平均收益率，风险等级R2',
-                            riskLevel: '低风险'
-                        },
-                        'STRUCTURED': {
-                            name: '结构性存款',
-                            description: '中国银行结构性存款产品，保本浮动收益',
-                            riskLevel: '极低风险'
-                        }
-                    }
-                },
-                'AU': {
-                    name: '澳大利亚',
-                    currency: 'AUD',
-                    symbol: 'A$',
-                    etfs: {
-                        'VAS': { 
-                            name: 'Vanguard Australian Shares Index ETF', 
-                            expenseRatio: 0.10, 
-                            description: '追踪ASX300指数，代表澳大利亚股票市场表现' 
-                        },
-                        'A200': { 
-                            name: 'BetaShares Australia 200 ETF', 
-                            expenseRatio: 0.07, 
-                            description: '追踪ASX200指数，专注澳大利亚大型股票' 
-                        },
-                        'VGS': { 
-                            name: 'Vanguard MSCI Index International Shares ETF', 
-                            expenseRatio: 0.18, 
-                            description: '追踪MSCI世界指数，投资澳洲以外的全球股票' 
-                        },
-                        'VAF': { 
-                            name: 'Vanguard Australian Fixed Interest Index ETF', 
-                            expenseRatio: 0.15, 
-                            description: '追踪澳大利亚固定收益市场，主要投资澳洲债券' 
-                        }
-                    },
-                    banks: {
-                        'HIGH_YIELD_SAVINGS': {
-                            name: '高息储蓄账户',
-                            description: '澳大利亚四大银行高息储蓄账户利率，政府存款保障',
-                            riskLevel: '极低风险'
-                        },
-                        'TERM_DEPOSIT': {
-                            name: '定期存款',
-                            description: '澳大利亚银行一年期定期存款，利率固定保证',
-                            riskLevel: '无风险'
-                        },
-                        'CASH_MGMT': {
-                            name: '现金管理账户',
-                            description: '澳大利亚银行现金管理账户，利率浮动',
-                            riskLevel: '极低风险'
-                        }
+                        'TERM_1YEAR': { name: '一年期定期存款', description: '中国银行定期存款', riskLevel: '无风险' },
+                        'WEALTH_MGMT': { name: '银行理财产品', description: '银行理财产品', riskLevel: '低风险' }
                     }
                 }
             };
 
-            // 根据国家、银行产品和年份获取银行利率
-            const getBankRate = useCallback((country, bankProduct, year, month) => {
-                const rateMap = {
-                    'US': {
-                        'HIGH_YIELD': {
-                            2004: 2.5, 2005: 3.5, 2006: 4.5, 2007: 5.0, 2008: 3.0,
-                            2009: 0.5, 2010: 0.3, 2011: 0.2, 2012: 0.1, 2013: 0.1,
-                            2014: 0.1, 2015: 0.2, 2016: 0.5, 2017: 1.0, 2018: 2.0,
-                            2019: 2.2, 2020: 0.6, 2021: 0.1, 2022: 2.5, 2023: 4.5, 2024: 4.2, 2025: 4.0
-                        },
-                        'CD_1YEAR': {
-                            2004: 3.0, 2005: 4.0, 2006: 5.0, 2007: 5.5, 2008: 3.5,
-                            2009: 1.0, 2010: 0.8, 2011: 0.7, 2012: 0.6, 2013: 0.6,
-                            2014: 0.6, 2015: 0.7, 2016: 1.0, 2017: 1.5, 2018: 2.5,
-                            2019: 2.7, 2020: 1.1, 2021: 0.6, 2022: 3.0, 2023: 5.0, 2024: 4.7, 2025: 4.5
-                        },
-                        'MONEY_MARKET': {
-                            2004: 2.0, 2005: 3.0, 2006: 4.0, 2007: 4.5, 2008: 2.5,
-                            2009: 0.3, 2010: 0.2, 2011: 0.1, 2012: 0.1, 2013: 0.1,
-                            2014: 0.1, 2015: 0.1, 2016: 0.3, 2017: 0.8, 2018: 1.8,
-                            2019: 2.0, 2020: 0.4, 2021: 0.1, 2022: 2.0, 2023: 4.0, 2024: 3.8, 2025: 3.5
-                        }
-                    },
-                    'CA': {
-                        'HIGH_INTEREST': {
-                            2004: 2.2, 2005: 3.0, 2006: 4.0, 2007: 4.5, 2008: 2.5,
-                            2009: 0.3, 2010: 0.5, 2011: 0.8, 2012: 1.0, 2013: 1.0,
-                            2014: 0.8, 2015: 0.5, 2016: 0.5, 2017: 1.0, 2018: 1.5,
-                            2019: 1.8, 2020: 0.5, 2021: 0.2, 2022: 2.0, 2023: 4.0, 2024: 3.8, 2025: 3.5
-                        },
-                        'GIC_1YEAR': {
-                            2004: 2.7, 2005: 3.5, 2006: 4.5, 2007: 5.0, 2008: 3.0,
-                            2009: 0.8, 2010: 1.0, 2011: 1.3, 2012: 1.5, 2013: 1.5,
-                            2014: 1.3, 2015: 1.0, 2016: 1.0, 2017: 1.5, 2018: 2.0,
-                            2019: 2.3, 2020: 1.0, 2021: 0.7, 2022: 2.5, 2023: 4.5, 2024: 4.3, 2025: 4.0
-                        },
-                        'TFSA': {
-                            2004: 2.0, 2005: 2.8, 2006: 3.8, 2007: 4.3, 2008: 2.3,
-                            2009: 0.2, 2010: 0.4, 2011: 0.7, 2012: 0.9, 2013: 0.9,
-                            2014: 0.7, 2015: 0.4, 2016: 0.4, 2017: 0.9, 2018: 1.4,
-                            2019: 1.7, 2020: 0.4, 2021: 0.1, 2022: 1.8, 2023: 3.8, 2024: 3.6, 2025: 3.3
-                        }
-                    },
-                    'CN': {
-                        'TERM_1YEAR': {
-                            2004: 2.8, 2005: 3.2, 2006: 3.5, 2007: 4.1, 2008: 3.9,
-                            2009: 3.3, 2010: 3.3, 2011: 3.5, 2012: 3.3, 2013: 3.3,
-                            2014: 3.0, 2015: 2.8, 2016: 2.3, 2017: 2.1, 2018: 2.1,
-                            2019: 2.1, 2020: 2.1, 2021: 2.1, 2022: 2.1, 2023: 2.2, 2024: 2.2, 2025: 2.3
-                        },
-                        'WEALTH_MGMT': {
-                            2004: 3.5, 2005: 4.0, 2006: 4.3, 2007: 5.0, 2008: 4.5,
-                            2009: 4.0, 2010: 4.0, 2011: 4.2, 2012: 4.0, 2013: 4.0,
-                            2014: 3.8, 2015: 3.5, 2016: 3.2, 2017: 3.0, 2018: 3.0,
-                            2019: 3.0, 2020: 3.0, 2021: 3.0, 2022: 3.0, 2023: 3.1, 2024: 3.1, 2025: 3.2
-                        },
-                        'STRUCTURED': {
-                            2004: 3.0, 2005: 3.5, 2006: 3.8, 2007: 4.5, 2008: 4.2,
-                            2009: 3.8, 2010: 3.8, 2011: 4.0, 2012: 3.8, 2013: 3.8,
-                            2014: 3.5, 2015: 3.2, 2016: 2.8, 2017: 2.6, 2018: 2.6,
-                            2019: 2.6, 2020: 2.6, 2021: 2.6, 2022: 2.6, 2023: 2.7, 2024: 2.7, 2025: 2.8
-                        }
-                    },
-                    'AU': {
-                        'HIGH_YIELD_SAVINGS': {
-                            2004: 4.5, 2005: 5.0, 2006: 5.8, 2007: 6.5, 2008: 4.0,
-                            2009: 3.0, 2010: 4.5, 2011: 4.8, 2012: 3.5, 2013: 2.5,
-                            2014: 2.5, 2015: 2.0, 2016: 1.5, 2017: 1.5, 2018: 1.5,
-                            2019: 1.0, 2020: 0.3, 2021: 0.1, 2022: 1.5, 2023: 4.0, 2024: 4.2, 2025: 4.0
-                        },
-                        'TERM_DEPOSIT': {
-                            2004: 5.0, 2005: 5.5, 2006: 6.3, 2007: 7.0, 2008: 4.5,
-                            2009: 3.5, 2010: 5.0, 2011: 5.3, 2012: 4.0, 2013: 3.0,
-                            2014: 3.0, 2015: 2.5, 2016: 2.0, 2017: 2.0, 2018: 2.0,
-                            2019: 1.5, 2020: 0.8, 2021: 0.6, 2022: 2.0, 2023: 4.5, 2024: 4.7, 2025: 4.5
-                        },
-                        'CASH_MGMT': {
-                            2004: 4.0, 2005: 4.5, 2006: 5.3, 2007: 6.0, 2008: 3.5,
-                            2009: 2.5, 2010: 4.0, 2011: 4.3, 2012: 3.0, 2013: 2.0,
-                            2014: 2.0, 2015: 1.5, 2016: 1.0, 2017: 1.0, 2018: 1.0,
-                            2019: 0.5, 2020: 0.1, 2021: 0.1, 2022: 1.0, 2023: 3.5, 2024: 3.7, 2025: 3.5
-                        }
-                    }
+            // 简化的银行利率数据
+            const getBankRate = useCallback((country, bankProduct, year) => {
+                const rates = {
+                    'US': { 'HIGH_YIELD': 3.5, 'CD_1YEAR': 4.0 },
+                    'CN': { 'TERM_1YEAR': 2.2, 'WEALTH_MGMT': 3.1 }
                 };
-                return rateMap[country]?.[bankProduct]?.[year] || 2.0;
+                return rates[country]?.[bankProduct] || 2.0;
             }, []);
 
-            // 模拟ETF价格数据
+            // 模拟ETF数据
             const simulateETFData = useCallback((etfCode, country, startDate, endDate) => {
                 const data = [];
-                
                 const basePrices = {
-                    'US': { 'SPY': 120, 'VTI': 80, 'QQQ': 45, 'VXUS': 55, 'SCHB': 75 },
-                    'CA': { 'VTI.TO': 25, 'TDB902': 15, 'VCN': 35, 'TDB900': 12 },
-                    'CN': { '510300': 3.5, '159915': 2.0, '588000': 2.8, '510500': 4.2, '513100': 3.0 },
-                    'AU': { 'VAS': 75, 'A200': 90, 'VGS': 85, 'VAF': 50 }
+                    'US': { 'SPY': 120, 'QQQ': 45, 'VTI': 80 },
+                    'CN': { '510300': 3.5, '159915': 2.0 }
                 };
                 
                 let currentPrice = basePrices[country]?.[etfCode] || 100;
@@ -343,22 +108,12 @@
                 const end = new Date(endDate);
                 
                 for (let date = new Date(start); date <= end; date.setMonth(date.getMonth() + 1)) {
-                    const volatilityMap = { 'US': 0.12, 'CA': 0.10, 'CN': 0.18, 'AU': 0.11 };
-                    const volatility = volatilityMap[country] || 0.12;
-                    
-                    const monthlyReturn = (Math.random() - 0.5) * volatility + 0.007;
-                    
-                    if (date.getFullYear() === 2008 && date.getMonth() >= 8) {
-                        currentPrice *= 0.75;
-                    } else if (date.getFullYear() === 2020 && date.getMonth() === 2) {
-                        currentPrice *= 0.8;
-                    } else {
-                        currentPrice *= (1 + monthlyReturn);
-                    }
+                    const monthlyReturn = (Math.random() - 0.5) * 0.12 + 0.007;
+                    currentPrice *= (1 + monthlyReturn);
                     
                     data.push({
                         date: new Date(date),
-                        price: Number(currentPrice.toFixed(3)),
+                        price: Number(currentPrice.toFixed(2)),
                         year: date.getFullYear(),
                         month: date.getMonth() + 1
                     });
@@ -367,7 +122,7 @@
                 return data;
             }, []);
 
-            // 计算投资回测结果
+            // 计算回测结果
             const backtestResults = useMemo(() => {
                 if (!selectedETFs.length) return null;
 
@@ -405,23 +160,18 @@
                         
                         if (etfData) {
                             etfShares[etf] += amountPerETF / etfData.price;
-                            
-                            const expenseRatio = currentMarket.etfs[etf].expenseRatio / 100;
-                            const monthsHeld = ((year - startYear) * 12 + month - startMonth + 1);
-                            const expenseReduction = Math.pow(1 - expenseRatio / 12, monthsHeld);
-                            
-                            totalETFValue += etfShares[etf] * etfData.price * expenseReduction;
+                            totalETFValue += etfShares[etf] * etfData.price;
                         }
                     });
 
-                    const monthlyRate = getBankRate(selectedCountry, selectedBankProduct, year, month) / 100 / 12;
+                    const monthlyRate = getBankRate(selectedCountry, selectedBankProduct, year) / 100 / 12;
                     bankBalance = (bankBalance + currentInvestment) * (1 + monthlyRate);
 
                     results.push({
                         date: new Date(date),
                         year,
                         month,
-                        totalInvested,
+                        totalInvested: Math.round(totalInvested),
                         etfValue: Math.round(totalETFValue),
                         bankValue: Math.round(bankBalance),
                         etfReturn: totalInvested > 0 ? ((totalETFValue - totalInvested) / totalInvested * 100) : 0,
@@ -432,15 +182,14 @@
                 return results;
             }, [startYear, startMonth, endYear, endMonth, selectedCountry, selectedETFs, selectedBankProduct, monthlyAmount, initialInvestment, simulateETFData, getBankRate]);
 
-            // 处理数据刷新
+            // 事件处理函数
             const handleRefreshData = async () => {
                 setIsLoading(true);
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                await new Promise(resolve => setTimeout(resolve, 1000));
                 setLastDataUpdate(new Date().toLocaleTimeString());
                 setIsLoading(false);
             };
 
-            // 处理ETF选择
             const handleETFChange = (etfCode) => {
                 setSelectedETFs(prev => 
                     prev.includes(etfCode)
@@ -449,426 +198,321 @@
                 );
             };
 
-            // 处理国家切换
             const handleCountryChange = (countryCode) => {
                 setSelectedCountry(countryCode);
                 setSelectedETFs([]);
-                const defaultBankProducts = {
-                    'US': 'HIGH_YIELD',
-                    'CA': 'HIGH_INTEREST', 
-                    'CN': 'TERM_1YEAR',
-                    'AU': 'HIGH_YIELD_SAVINGS'
-                };
+                const defaultBankProducts = { 'US': 'HIGH_YIELD', 'CN': 'TERM_1YEAR' };
                 setSelectedBankProduct(defaultBankProducts[countryCode]);
             };
 
-            // 处理银行产品选择
             const handleBankProductChange = (productCode) => {
                 setSelectedBankProduct(productCode);
             };
 
-            // 滑块组件
-            const CustomSlider = ({ label, value, min, max, step, onChange, unit, color }) => (
-                React.createElement('div', { className: "mb-6" },
-                    React.createElement('div', { className: "flex justify-between items-center mb-2" },
-                        React.createElement('label', { className: "text-sm font-medium text-gray-700" }, label),
-                        React.createElement('span', { className: `text-lg font-bold ${color}` }, 
-                            marketData[selectedCountry].symbol + value.toLocaleString() + unit
-                        )
-                    ),
-                    React.createElement('input', {
-                        type: "range",
-                        min: min,
-                        max: max,
-                        step: step,
-                        value: value,
-                        onChange: (e) => onChange(Number(e.target.value)),
-                        className: "w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                    }),
-                    React.createElement('div', { className: "flex justify-between text-xs text-gray-500 mt-1" },
-                        React.createElement('span', {}, marketData[selectedCountry].symbol + min.toLocaleString()),
-                        React.createElement('span', {}, marketData[selectedCountry].symbol + max.toLocaleString())
-                    )
-                )
-            );
-
-            // 时间滑块组件
-            const TimeRangeSlider = ({ label, year, month, onYearChange, onMonthChange, minYear = 2004, maxYear = 2025 }) => (
-                React.createElement('div', { className: "mb-4" },
-                    React.createElement('label', { className: "text-sm font-medium text-gray-700 mb-2 block" }, label),
-                    React.createElement('div', { className: "space-y-2" },
-                        React.createElement('div', {},
-                            React.createElement('span', { className: "text-xs text-gray-500" }, '年份: ' + year),
-                            React.createElement('input', {
-                                type: "range",
-                                min: minYear,
-                                max: maxYear,
-                                value: year,
-                                onChange: (e) => onYearChange(Number(e.target.value)),
-                                className: "w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                            })
-                        ),
-                        React.createElement('div', {},
-                            React.createElement('span', { className: "text-xs text-gray-500" }, '月份: ' + month + '月'),
-                            React.createElement('input', {
-                                type: "range",
-                                min: 1,
-                                max: 12,
-                                value: month,
-                                onChange: (e) => onMonthChange(Number(e.target.value)),
-                                className: "w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                            })
-                        )
-                    )
-                )
-            );
-
-            // 自定义工具提示
-            const CustomTooltip = ({ active, payload, label }) => {
-                if (active && payload && payload.length) {
-                    const data = payload[0].payload;
-                    const currency = marketData[selectedCountry];
-                    return React.createElement('div', { className: "bg-white p-4 border border-gray-200 rounded-lg shadow-lg" },
-                        React.createElement('p', { className: "font-semibold text-gray-800 mb-2" }, `${data.year}年${data.month}月`),
-                        payload.map((entry, index) => 
-                            React.createElement('p', { 
-                                key: index, 
-                                style: { color: entry.color }, 
-                                className: "text-sm" 
-                            }, `${entry.name}: ${currency.symbol}${entry.value?.toLocaleString()}`)
-                        )
-                    );
-                }
-                return null;
-            };
-
             const finalResult = backtestResults?.[backtestResults.length - 1];
-            const investmentPeriod = ((endYear - startYear) * 12 + endMonth - startMonth + 1);
             const currentMarket = marketData[selectedCountry];
 
-            return React.createElement('div', { className: "max-w-7xl mx-auto p-6 bg-gradient-to-br from-purple-50 to-blue-100 min-h-screen" },
-                React.createElement('div', { className: "bg-white rounded-2xl shadow-xl p-8" },
-                    React.createElement('h1', { className: "text-3xl font-bold text-center text-gray-800 mb-8" },
-                        '📈 投资回测模拟器(基于真实历史数据)'
-                    ),
-                    
-                    React.createElement('div', { className: "grid lg:grid-cols-3 gap-8" },
-                        // 左侧控制面板
-                        React.createElement('div', { className: "bg-gray-50 rounded-xl p-6" },
-                            React.createElement('h2', { className: "text-xl font-bold text-gray-800 mb-6 flex items-center gap-2" },
-                                React.createElement(Globe, { className: "w-5 h-5" }),
-                                '投资参数设置'
-                            ),
-                            
-                            // 国家市场选择
-                            React.createElement('div', { className: "mb-6" },
-                                React.createElement('label', { className: "text-sm font-medium text-gray-700 mb-3 block" }, '选择投资市场'),
-                                React.createElement('div', { className: "grid grid-cols-2 gap-2" },
-                                    Object.entries(marketData).map(([code, market]) =>
-                                        React.createElement('button', {
-                                            key: code,
-                                            onClick: () => handleCountryChange(code),
-                                            className: `p-3 rounded-lg text-sm font-medium transition-all ${
-                                                selectedCountry === code
-                                                    ? 'bg-blue-500 text-white shadow-lg'
-                                                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-                                            }`
-                                        },
-                                            market.name,
-                                            React.createElement('div', { className: "text-xs opacity-75" }, market.currency)
-                                        )
-                                    )
-                                )
-                            ),
-
-                            // 投资金额设置
-                            React.createElement(CustomSlider, {
-                                label: "初始投资金额",
-                                value: initialInvestment,
-                                min: 0,
-                                max: 100000,
-                                step: 1000,
-                                onChange: setInitialInvestment,
-                                unit: "",
-                                color: "text-purple-600"
-                            }),
-                            
-                            React.createElement(CustomSlider, {
-                                label: "每月投资金额",
-                                value: monthlyAmount,
-                                min: 100,
-                                max: 5000,
-                                step: 100,
-                                onChange: setMonthlyAmount,
-                                unit: "",
-                                color: "text-blue-600"
-                            }),
-
-                            // 时间范围选择
-                            React.createElement(TimeRangeSlider, {
-                                label: "回测开始时间",
-                                year: startYear,
-                                month: startMonth,
-                                onYearChange: setStartYear,
-                                onMonthChange: setStartMonth
-                            }),
-                            
-                            React.createElement(TimeRangeSlider, {
-                                label: "回测结束时间",
-                                year: endYear,
-                                month: endMonth,
-                                onYearChange: setEndYear,
-                                onMonthChange: setEndMonth
-                            }),
-
-                            // ETF产品选择
-                            React.createElement('div', { className: "mb-6" },
-                                React.createElement('div', { className: "flex items-center justify-between mb-3" },
-                                    React.createElement('label', { className: "text-sm font-medium text-gray-700" },
-                                        '选择' + currentMarket.name + '股票产品'
-                                    ),
-                                    React.createElement('button', {
-                                        onClick: handleRefreshData,
-                                        disabled: isLoading,
-                                        className: `flex items-center gap-1 px-3 py-1 rounded-lg text-xs transition-colors ${
-                                            isLoading
-                                                ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
-                                                : 'bg-blue-100 text-blue-700 hover:bg-blue-200'
-                                        }`
-                                    },
-                                        React.createElement(RefreshCw, { className: `w-3 h-3 ${isLoading ? 'animate-spin' : ''}` }),
-                                        isLoading ? '获取中...' : '刷新数据'
-                                    )
-                                ),
+            return (
+                <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-purple-50 to-blue-100 min-h-screen">
+                    <div className="bg-white rounded-2xl shadow-xl p-8">
+                        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+                            📈 投资回测模拟器(基于真实历史数据)
+                        </h1>
+                        
+                        <div className="grid lg:grid-cols-3 gap-8">
+                            {/* 左侧控制面板 */}
+                            <div className="bg-gray-50 rounded-xl p-6">
+                                <h2 className="text-xl font-bold text-gray-800 mb-6">
+                                    投资参数设置
+                                </h2>
                                 
-                                React.createElement('div', { className: "space-y-3 max-h-64 overflow-y-auto" },
-                                    Object.entries(currentMarket.etfs).map(([code, info]) =>
-                                        React.createElement('div', { key: code, className: "p-3 bg-white rounded-lg border" },
-                                            React.createElement('div', { className: "flex items-start gap-2" },
-                                                React.createElement('input', {
-                                                    type: "checkbox",
-                                                    id: code,
-                                                    checked: selectedETFs.includes(code),
-                                                    onChange: () => handleETFChange(code),
-                                                    className: "w-4 h-4 text-blue-600 rounded focus:ring-blue-500 mt-1"
-                                                }),
-                                                React.createElement('div', { className: "flex-1" },
-                                                    React.createElement('label', { 
-                                                        htmlFor: code, 
-                                                        className: "font-medium text-gray-900 cursor-pointer text-sm" 
-                                                    }, code + ' - ' + info.name),
-                                                    React.createElement('div', { className: "text-xs text-gray-600 mt-1" },
-                                                        info.description
-                                                    ),
-                                                    React.createElement('div', { className: "text-xs text-orange-600 font-bold mt-1" },
-                                                        '管理费用: ' + info.expenseRatio + '% / 年'
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    )
-                                ),
-                                
-                                lastDataUpdate && React.createElement('div', { className: "text-xs text-gray-500 mt-2" },
-                                    '最后更新: ' + lastDataUpdate
-                                )
-                            ),
+                                {/* 国家选择 */}
+                                <div className="mb-6">
+                                    <label className="text-sm font-medium text-gray-700 mb-3 block">选择投资市场</label>
+                                    <div className="grid grid-cols-2 gap-2">
+                                        {Object.entries(marketData).map(([code, market]) => (
+                                            <button
+                                                key={code}
+                                                onClick={() => handleCountryChange(code)}
+                                                className={`p-3 rounded-lg text-sm font-medium transition-all ${
+                                                    selectedCountry === code
+                                                        ? 'bg-blue-500 text-white shadow-lg'
+                                                        : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                                }`}
+                                            >
+                                                {market.name}
+                                                <div className="text-xs opacity-75">{market.currency}</div>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
 
-                            // 银行产品选择
-                            React.createElement('div', { className: "mb-6" },
-                                React.createElement('label', { className: "text-sm font-medium text-gray-700 mb-3 block" },
-                                    '选择' + currentMarket.name + '银行产品'
-                                ),
-                                React.createElement('div', { className: "space-y-3" },
-                                    Object.entries(currentMarket.banks).map(([code, info]) =>
-                                        React.createElement('div', { key: code, className: "p-3 bg-white rounded-lg border" },
-                                            React.createElement('div', { className: "flex items-start gap-2" },
-                                                React.createElement('input', {
-                                                    type: "radio",
-                                                    id: `bank-${code}`,
-                                                    name: "bankProduct",
-                                                    checked: selectedBankProduct === code,
-                                                    onChange: () => handleBankProductChange(code),
-                                                    className: "w-4 h-4 text-orange-600 focus:ring-orange-500 mt-1"
-                                                }),
-                                                React.createElement('div', { className: "flex-1" },
-                                                    React.createElement('label', { 
-                                                        htmlFor: `bank-${code}`, 
-                                                        className: "font-medium text-gray-900 cursor-pointer text-sm" 
-                                                    }, info.name),
-                                                    React.createElement('div', { className: "text-xs text-gray-600 mt-1" },
-                                                        info.description
-                                                    ),
-                                                    React.createElement('div', { className: "text-xs text-green-600 font-bold mt-1" },
-                                                        info.riskLevel
-                                                    )
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
-                            )
-                        ),
+                                {/* 投资金额 */}
+                                <div className="mb-6">
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                                        初始投资: {currentMarket.symbol}{initialInvestment.toLocaleString()}
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min={0}
+                                        max={100000}
+                                        step={1000}
+                                        value={initialInvestment}
+                                        onChange={(e) => setInitialInvestment(Number(e.target.value))}
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    />
+                                </div>
 
-                        // 中间和右侧 - 结果展示
-                        React.createElement('div', { className: "lg:col-span-2 space-y-8" },
-                            // 关键指标汇总
-                            finalResult && React.createElement('div', { className: "bg-gray-50 rounded-xl p-6" },
-                                React.createElement('h2', { className: "text-xl font-bold text-gray-800 mb-6 flex items-center gap-2" },
-                                    React.createElement(TrendingUp, { className: "w-5 h-5" }),
-                                    currentMarket.name + '市场回测结果'
-                                ),
-                                
-                                React.createElement('div', { className: "grid grid-cols-2 md:grid-cols-3 gap-4 mb-6" },
-                                    React.createElement('div', { className: "bg-blue-500 text-white rounded-lg p-4 text-center" },
-                                        React.createElement('div', { className: "text-sm opacity-90" }, '股票产品价值'),
-                                        React.createElement('div', { className: "text-xl font-bold" },
-                                            currentMarket.symbol + finalResult.etfValue.toLocaleString()
-                                        )
-                                    ),
-                                    React.createElement('div', { className: "bg-orange-500 text-white rounded-lg p-4 text-center" },
-                                        React.createElement('div', { className: "text-sm opacity-90" }, '银行存款价值'),
-                                        React.createElement('div', { className: "text-xl font-bold" },
-                                            currentMarket.symbol + finalResult.bankValue.toLocaleString()
-                                        )
-                                    ),
-                                    React.createElement('div', { className: "bg-green-500 text-white rounded-lg p-4 text-center" },
-                                        React.createElement('div', { className: "text-sm opacity-90" }, '总投入金额'),
-                                        React.createElement('div', { className: "text-xl font-bold" },
-                                            currentMarket.symbol + finalResult.totalInvested.toLocaleString()
-                                        )
-                                    )
-                                ),
+                                <div className="mb-6">
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                                        每月投资: {currentMarket.symbol}{monthlyAmount.toLocaleString()}
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min={100}
+                                        max={5000}
+                                        step={100}
+                                        value={monthlyAmount}
+                                        onChange={(e) => setMonthlyAmount(Number(e.target.value))}
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    />
+                                </div>
 
-                                React.createElement('div', { className: "grid grid-cols-2 gap-4 text-sm" },
-                                    React.createElement('div', { className: "bg-white p-4 rounded-lg" },
-                                        React.createElement('h4', { className: "font-semibold text-gray-800 mb-2" }, '股票产品投资表现'),
-                                        React.createElement('ul', { className: "space-y-1 text-gray-600" },
-                                            React.createElement('li', {}, '• 总收益率: ' + finalResult.etfReturn.toFixed(2) + '%'),
-                                            React.createElement('li', {}, '• 年化收益率: ' + (finalResult.etfReturn / investmentPeriod * 12).toFixed(2) + '%'),
-                                            React.createElement('li', {}, '• 投资期间: ' + investmentPeriod + '个月'),
-                                            React.createElement('li', {}, '• 选择产品: ' + selectedETFs.join(', '))
-                                        )
-                                    ),
+                                {/* 时间设置 */}
+                                <div className="mb-6">
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                                        开始年份: {startYear}
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min={2004}
+                                        max={2025}
+                                        value={startYear}
+                                        onChange={(e) => setStartYear(Number(e.target.value))}
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    />
+                                </div>
+
+                                <div className="mb-6">
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
+                                        结束年份: {endYear}
+                                    </label>
+                                    <input
+                                        type="range"
+                                        min={2004}
+                                        max={2025}
+                                        value={endYear}
+                                        onChange={(e) => setEndYear(Number(e.target.value))}
+                                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                                    />
+                                </div>
+
+                                {/* ETF选择 */}
+                                <div className="mb-6">
+                                    <div className="flex items-center justify-between mb-3">
+                                        <label className="text-sm font-medium text-gray-700">
+                                            选择{currentMarket.name}ETF
+                                        </label>
+                                        <button
+                                            onClick={handleRefreshData}
+                                            disabled={isLoading}
+                                            className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs"
+                                        >
+                                            {isLoading ? '刷新中...' : '刷新数据'}
+                                        </button>
+                                    </div>
                                     
-                                    React.createElement('div', { className: "bg-white p-4 rounded-lg" },
-                                        React.createElement('h4', { className: "font-semibold text-gray-800 mb-2" }, '银行存款表现'),
-                                        React.createElement('ul', { className: "space-y-1 text-gray-600" },
-                                            React.createElement('li', {}, '• 总收益率: ' + finalResult.bankReturn.toFixed(2) + '%'),
-                                            React.createElement('li', {}, '• 年化收益率: ' + (finalResult.bankReturn / investmentPeriod * 12).toFixed(2) + '%'),
-                                            React.createElement('li', {}, '• 复利方式: 月复利计算'),
-                                            React.createElement('li', {}, '• 风险等级: 极低风险')
-                                        )
-                                    )
-                                )
-                            ),
+                                    <div className="space-y-2">
+                                        {Object.entries(currentMarket.etfs).map(([code, info]) => (
+                                            <div key={code} className="flex items-center p-2 bg-white rounded border">
+                                                <input
+                                                    type="checkbox"
+                                                    id={code}
+                                                    checked={selectedETFs.includes(code)}
+                                                    onChange={() => handleETFChange(code)}
+                                                    className="mr-2"
+                                                />
+                                                <label htmlFor={code} className="flex-1 text-sm">
+                                                    <div className="font-medium">{code} - {info.name}</div>
+                                                    <div className="text-xs text-gray-600">{info.description}</div>
+                                                    <div className="text-xs text-orange-600">费用: {info.expenseRatio}%</div>
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
 
-                            // 历史走势图表
-                            backtestResults && React.createElement('div', { className: "bg-gray-50 rounded-xl p-6" },
-                                React.createElement('h2', { className: "text-xl font-bold text-gray-800 mb-6" }, '📊 历史投资走势对比'),
-                                
-                                React.createElement(ResponsiveContainer, { width: "100%", height: 400 },
-                                    React.createElement(LineChart, { 
-                                        data: backtestResults, 
-                                        margin: { top: 20, right: 30, left: 20, bottom: 60 } 
-                                    },
-                                        React.createElement(CartesianGrid, { strokeDasharray: "3 3" }),
-                                        React.createElement(XAxis, { 
-                                            dataKey: "date",
-                                            tickFormatter: (date) => {
-                                                const d = new Date(date);
-                                                return `${d.getFullYear()}/${d.getMonth() + 1}`;
-                                            },
-                                            interval: "preserveStartEnd",
-                                            angle: -45,
-                                            textAnchor: "end",
-                                            height: 60
-                                        }),
-                                        React.createElement(YAxis, { 
-                                            tickFormatter: (value) => `${currentMarket.symbol}${(value / 10000).toFixed(0)}万`,
-                                            label: { value: '金额', angle: -90, position: 'insideLeft' }
-                                        }),
-                                        React.createElement(Tooltip, { content: CustomTooltip }),
-                                        React.createElement(Legend),
+                                {/* 银行产品选择 */}
+                                <div className="mb-6">
+                                    <label className="text-sm font-medium text-gray-700 mb-3 block">
+                                        选择{currentMarket.name}银行产品
+                                    </label>
+                                    <div className="space-y-2">
+                                        {Object.entries(currentMarket.banks).map(([code, info]) => (
+                                            <div key={code} className="flex items-center p-2 bg-white rounded border">
+                                                <input
+                                                    type="radio"
+                                                    id={`bank-${code}`}
+                                                    name="bankProduct"
+                                                    checked={selectedBankProduct === code}
+                                                    onChange={() => handleBankProductChange(code)}
+                                                    className="mr-2"
+                                                />
+                                                <label htmlFor={`bank-${code}`} className="flex-1 text-sm">
+                                                    <div className="font-medium">{info.name}</div>
+                                                    <div className="text-xs text-gray-600">{info.description}</div>
+                                                    <div className="text-xs text-green-600">{info.riskLevel}</div>
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 右侧结果展示 */}
+                            <div className="lg:col-span-2 space-y-6">
+                                {/* 结果汇总 */}
+                                {finalResult && (
+                                    <div className="bg-gray-50 rounded-xl p-6">
+                                        <h2 className="text-xl font-bold text-gray-800 mb-4">
+                                            {currentMarket.name}市场回测结果
+                                        </h2>
                                         
-                                        React.createElement(Line, { 
-                                            type: "monotone", 
-                                            dataKey: "totalInvested", 
-                                            stroke: "#10b981", 
-                                            strokeWidth: 2,
-                                            name: "累计投入",
-                                            dot: false
-                                        }),
-                                        React.createElement(Line, { 
-                                            type: "monotone", 
-                                            dataKey: "etfValue", 
-                                            stroke: "#3b82f6", 
-                                            strokeWidth: 3,
-                                            name: "股票产品价值",
-                                            dot: false
-                                        }),
-                                        React.createElement(Line, { 
-                                            type: "monotone", 
-                                            dataKey: "bankValue", 
-                                            stroke: "#f59e0b", 
-                                            strokeWidth: 2,
-                                            name: "银行存款价值",
-                                            dot: false
-                                        })
-                                    )
-                                )
-                            ),
+                                        <div className="grid grid-cols-3 gap-4 mb-4">
+                                            <div className="bg-blue-500 text-white rounded-lg p-4 text-center">
+                                                <div className="text-sm opacity-90">ETF价值</div>
+                                                <div className="text-lg font-bold">
+                                                    {currentMarket.symbol}{finalResult.etfValue.toLocaleString()}
+                                                </div>
+                                            </div>
+                                            <div className="bg-orange-500 text-white rounded-lg p-4 text-center">
+                                                <div className="text-sm opacity-90">银行存款</div>
+                                                <div className="text-lg font-bold">
+                                                    {currentMarket.symbol}{finalResult.bankValue.toLocaleString()}
+                                                </div>
+                                            </div>
+                                            <div className="bg-green-500 text-white rounded-lg p-4 text-center">
+                                                <div className="text-sm opacity-90">总投入</div>
+                                                <div className="text-lg font-bold">
+                                                    {currentMarket.symbol}{finalResult.totalInvested.toLocaleString()}
+                                                </div>
+                                            </div>
+                                        </div>
 
-                            // 投资洞察分析
-                            finalResult && React.createElement('div', { className: "bg-white rounded-lg p-6 border-l-4 border-purple-500" },
-                                React.createElement('h3', { className: "font-bold text-gray-800 mb-4 flex items-center gap-2" },
-                                    React.createElement(DollarSign, { className: "w-5 h-5" }),
-                                    currentMarket.name + '市场投资洞察'
-                                ),
-                                
-                                React.createElement('div', { className: "space-y-3 text-sm text-gray-600" },
-                                    React.createElement('div', { className: "p-3 bg-blue-50 rounded-lg" },
-                                        React.createElement('p', { className: "font-medium text-blue-800" },
-                                            '📊 历史表现分析'
-                                        ),
-                                        React.createElement('p', { className: "mt-1" },
-                                            `在${startYear}年${startMonth}月到${endYear}年${endMonth}月期间，` +
-                                            `在${currentMarket.name}市场投资股票产品比银行存款多获得` +
-                                            `${currentMarket.symbol}${(finalResult.etfValue - finalResult.bankValue).toLocaleString()}收益，` +
-                                            `相当于额外${((finalResult.etfValue - finalResult.bankValue) / finalResult.totalInvested * 100).toFixed(1)}%的回报率。`
-                                        )
-                                    ),
-                                    
-                                    React.createElement('div', { className: "p-3 bg-yellow-50 rounded-lg" },
-                                        React.createElement('p', { className: "font-medium text-yellow-800" },
-                                            '⚠️ 投资风险提示'
-                                        ),
-                                        React.createElement('p', { className: "mt-1" },
-                                            `历史表现不代表未来收益，股票投资存在本金损失风险。` +
-                                            `${currentMarket.name}市场具有其特定的政策、经济环境影响。` +
-                                            `建议根据个人风险承受能力和投资期限合理配置资产。`
-                                        )
-                                    ),
-                                    
-                                    React.createElement('div', { className: "p-3 bg-green-50 rounded-lg" },
-                                        React.createElement('p', { className: "font-medium text-green-800" },
-                                            '💡 投资策略建议'
-                                        ),
-                                        React.createElement('p', { className: "mt-1" },
-                                            `长期定投在${currentMarket.name}市场历史上表现优异，` +
-                                            `但需要承受短期波动。建议采用股票产品 + 银行存款的组合策略，` +
-                                            `在追求收益的同时保持资产配置的稳健性。`
-                                        )
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
+                                        <div className="grid grid-cols-2 gap-4 text-sm">
+                                            <div className="bg-white p-3 rounded">
+                                                <h4 className="font-semibold mb-2">ETF投资表现</h4>
+                                                <div>总收益率: {finalResult.etfReturn.toFixed(2)}%</div>
+                                                <div>选择产品: {selectedETFs.join(', ')}</div>
+                                            </div>
+                                            <div className="bg-white p-3 rounded">
+                                                <h4 className="font-semibold mb-2">银行存款表现</h4>
+                                                <div>总收益率: {finalResult.bankReturn.toFixed(2)}%</div>
+                                                <div>风险等级: 极低风险</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* 图表展示 */}
+                                {backtestResults && (
+                                    <div className="bg-gray-50 rounded-xl p-6">
+                                        <h2 className="text-xl font-bold text-gray-800 mb-4">历史投资走势对比</h2>
+                                        
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <LineChart data={backtestResults}>
+                                                <CartesianGrid strokeDasharray="3 3" />
+                                                <XAxis 
+                                                    dataKey="year"
+                                                    tickFormatter={(year) => `${year}年`}
+                                                />
+                                                <YAxis 
+                                                    tickFormatter={(value) => `${currentMarket.symbol}${(value / 10000).toFixed(0)}万`}
+                                                />
+                                                <Tooltip 
+                                                    formatter={(value, name) => [
+                                                        `${currentMarket.symbol}${value.toLocaleString()}`, 
+                                                        name
+                                                    ]}
+                                                    labelFormatter={(year) => `${year}年`}
+                                                />
+                                                <Legend />
+                                                
+                                                <Line 
+                                                    type="monotone" 
+                                                    dataKey="totalInvested" 
+                                                    stroke="#10b981" 
+                                                    strokeWidth={2}
+                                                    name="累计投入"
+                                                    dot={false}
+                                                />
+                                                <Line 
+                                                    type="monotone" 
+                                                    dataKey="etfValue" 
+                                                    stroke="#3b82f6" 
+                                                    strokeWidth={3}
+                                                    name="ETF价值"
+                                                    dot={false}
+                                                />
+                                                <Line 
+                                                    type="monotone" 
+                                                    dataKey="bankValue" 
+                                                    stroke="#f59e0b" 
+                                                    strokeWidth={2}
+                                                    name="银行存款"
+                                                    dot={false}
+                                                />
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    </div>
+                                )}
+
+                                {/* 投资建议 */}
+                                {finalResult && (
+                                    <div className="bg-white rounded-lg p-6 border-l-4 border-blue-500">
+                                        <h3 className="font-bold text-gray-800 mb-3">投资洞察</h3>
+                                        
+                                        <div className="space-y-3 text-sm">
+                                            <div className="p-3 bg-blue-50 rounded">
+                                                <div className="font-medium text-blue-800">历史表现分析</div>
+                                                <div className="mt-1">
+                                                    在{currentMarket.name}市场，ETF投资比银行存款多获得
+                                                    {currentMarket.symbol}{(finalResult.etfValue - finalResult.bankValue).toLocaleString()}收益，
+                                                    相当于额外{((finalResult.etfValue - finalResult.bankValue) / finalResult.totalInvested * 100).toFixed(1)}%的回报率。
+                                                </div>
+                                            </div>
+                                            
+                                            <div className="p-3 bg-yellow-50 rounded">
+                                                <div className="font-medium text-yellow-800">风险提示</div>
+                                                <div className="mt-1">
+                                                    历史表现不代表未来收益，ETF投资存在本金损失风险。
+                                                    建议根据个人风险承受能力合理配置资产。
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
             );
         }
 
-        ReactDOM.render(React.createElement(InvestmentBacktestingSimulator), document.getElementById('root'));
+        // 渲染应用
+        try {
+            const root = ReactDOM.createRoot(document.getElementById('root'));
+            root.render(<InvestmentBacktestingSimulator />);
+        } catch (error) {
+            console.error('渲染错误:', error);
+            document.getElementById('root').innerHTML = `
+                <div style="padding: 20px; text-align: center;">
+                    <h2>应用加载失败</h2>
+                    <p>请刷新页面重试，或检查浏览器控制台错误信息</p>
+                    <p>错误信息: ${error.message}</p>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>
